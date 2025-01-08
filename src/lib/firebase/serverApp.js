@@ -8,6 +8,24 @@ import { initializeServerApp } from "firebase/app";
 import { firebaseConfig } from "./config";
 import { getAuth } from "firebase/auth";
 
+/**
+ * 서버에서 인증 상태 읽기
+ * @returns
+ */
 export async function getAuthenticatedAppForUser() {
-  throw new Error('not implemented');
+  console.log("firebaseConfig", JSON.stringify(firebaseConfig));
+
+  const firebaseServerApp = initializeServerApp(
+    firebaseConfig,
+    idToken
+      ? {
+          authIdToken: headers().get("Authorization")?.split("Bearer ")[1],
+        }
+      : {}
+  );
+
+  const auth = getAuth(firebaseServerApp);
+  await auth.authStateReady();
+
+  return { firebaseServerApp, currentUser: auth.currentUser };
 }
