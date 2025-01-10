@@ -15,11 +15,12 @@ import { getAuth } from "firebase/auth";
 export async function getAuthenticatedAppForUser() {
   console.log("firebaseConfig", JSON.stringify(firebaseConfig));
 
+  const idToken = headers().get("Authorization")?.split("Bearer ")[1];
   const firebaseServerApp = initializeServerApp(
     firebaseConfig,
     idToken
       ? {
-          authIdToken: headers().get("Authorization")?.split("Bearer ")[1],
+          authIdToken: idToken,
         }
       : {}
   );
